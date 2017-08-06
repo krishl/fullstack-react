@@ -53,6 +53,11 @@ function reducer(state, action) {
         ),
       ],
     };
+  } else if (action.type === 'OPEN_THREAD') {
+    return {
+      ...state,
+      activeThreadId: action.id,
+    };
   } else {
     return state;
   }
