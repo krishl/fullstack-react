@@ -2,14 +2,14 @@ import React from 'react';
 import { createStore } from 'redux';
 import uuid from 'uuid';
 
-function reducer(state, action) {
+function reducer(state = {}, action) {
   return {
     activeThreadId: activeThreadIdReducer(state.activeThreadId, action),
     threads: threadsReducer(state.threads, action),
   };
 }
 
-function activeThreadIdReducer(state, action) {
+function activeThreadIdReducer(state = '1-fca2', action) {
   if (action.type === 'OPEN_THREAD') {
     return action.id;
   } else {
@@ -34,7 +34,18 @@ function findThreadIndex(threads, action) {
   }
 }
 
-function threadsReducer(state, action) {
+function threadsReducer(state = [
+  {
+    id: '1-fca2',
+    title: 'Buzz Aldrin',
+    messages: messagesReducer(undefined, {}),
+  },
+  {
+    id: '2-be91',
+    title: 'Michael Collins',
+    messages: messagesReducer(undefined, {}),
+  },
+], action) {
   switch (action.type) {
     case 'ADD_MESSAGE':
     case 'DELETE_MESSAGE': {
@@ -60,7 +71,7 @@ function threadsReducer(state, action) {
   }
 }
 
-function messagesReducer(state, action) {
+function messagesReducer(state = [], action) {
   switch (action.type) {
     case 'ADD_MESSAGE': {
       const newMessage = {
@@ -79,28 +90,7 @@ function messagesReducer(state, action) {
   }
 }
 
-const initialState = { 
-  activeThreadId: '1-fca2', // New state property
-  threads: [ // Two threads in state
-    {
-      id: '1-fca2', // hardcoded pseudo-UUID
-      title: 'Buzz Aldrin',
-      messages: [
-        { // This thread starts with a single message already
-          text: 'Twelve minutes to ignition.',
-          timestamp: Date.now(),
-          id: uuid.v4(),
-        },
-      ],
-    },
-    {
-      id: '2-be91',
-      title: 'Michael Collins',
-      messages: [],
-    },
-  ], };
-
-const store = createStore(reducer, initialState);
+const store = createStore(reducer);
 
 class App extends React.Component {
   componentDidMount() {
