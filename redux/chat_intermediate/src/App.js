@@ -1,7 +1,7 @@
 import React from 'react';
 import { createStore, combineReducers } from 'redux';
 import uuid from 'uuid';
-import { Provider } from 'react-redux';
+import { Provider, connect } from 'react-redux';
 
 const reducer = combineReducers({
   activeThreadId: activeThreadIdReducer, // activeThreadId: activeThreadIdReducer(state.activeThreadId, action)
@@ -114,35 +114,35 @@ const Tabs = (props) => (
   </div>
 );
 
-class ThreadTabs extends React.Component {
-  componentDidMount() {
-    store.subscribe(() => this.forceUpdate());
+const mapStateToTabsProps = (state) => {
+  const tabs = state.threads.map(t => (
+    {
+      title: t.title,
+      active: t.id === state.activeThreadId,
+      id: t.id,
+    }
+  ));
+
+  return {
+    tabs,
+  };
+};
+
+const mapDispatchToTabsProps = (dispatch) => (
+  {
+    onClick: (id) => (
+      dispatch({
+        type: 'OPEN_THREAD',
+        id: id,
+      })
+    ),
   }
+);
 
-  render() {
-    const state = store.getState();
-
-    const tabs = state.threads.map(t => (
-      {
-        title: t.title,
-        active: t.id === state.activeThreadId,
-        id: t.id,
-      }
-    ));
-
-    return (
-      <Tabs
-        tabs={tabs}
-        onClick={(id) => (
-          store.dispatch({
-            type: 'OPEN_THREAD',
-            id: id,
-          })
-        )}
-      />
-    );
-  }
-}
+const ThreadTabs = connect(
+  mapStateToTabsProps,
+  mapDispatchToTabsProps
+)(Tabs);
 
 class TextFieldSubmit extends React.Component {
   state = {
