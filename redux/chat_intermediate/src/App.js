@@ -1,6 +1,7 @@
 import React from 'react';
 import { createStore, combineReducers } from 'redux';
 import uuid from 'uuid';
+import { Provider } from 'react-redux';
 
 const reducer = combineReducers({
   activeThreadId: activeThreadIdReducer, // activeThreadId: activeThreadIdReducer(state.activeThreadId, action)
@@ -245,4 +246,10 @@ class ThreadDisplay extends React.Component {
   }
 }
 
-export default App;
+const WrappedApp = () => (
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
+
+export default WrappedApp;
