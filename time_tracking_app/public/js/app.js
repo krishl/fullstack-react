@@ -41,7 +41,7 @@ class TimersDashboard extends React.Component {
       timers: this.state.timers.concat(t),
     });
   };
-  
+
   updateTimer = (attrs) => {
     this.setState({
       timers: this.state.timers.map((timer) => {
@@ -77,6 +77,10 @@ class TimersDashboard extends React.Component {
         }
       }),
     });
+
+    client.startTimer(
+      { id: timerId, start: now }
+    );
   };
 
   stopTimer = (timerId) => {
@@ -95,27 +99,31 @@ class TimersDashboard extends React.Component {
         }
       }),
     });
+
+    client.stopTimer(
+      { id: timerId, stop: now }
+    );
   };
 
-    render() {
-      return (
-        <div className='ui three column centered grid'>
-          <div className='column'>
-            <EditableTimerList
-              timers={this.state.timers}
-              onFormSubmit={this.handleEditFormSubmit}
-              onTrashClick={this.handleTrashClick}
-              onStartClick={this.handleStartClick}
-              onStopClick={this.handleStopClick}
-            />
-            <ToggleableTimerForm
-              onFormSubmit={this.handleCreateFormSubmit}
-            />
-          </div>
+  render() {
+    return (
+      <div className='ui three column centered grid'>
+        <div className='column'>
+          <EditableTimerList
+            timers={this.state.timers}
+            onFormSubmit={this.handleEditFormSubmit}
+            onTrashClick={this.handleTrashClick}
+            onStartClick={this.handleStartClick}
+            onStopClick={this.handleStopClick}
+          />
+          <ToggleableTimerForm
+            onFormSubmit={this.handleCreateFormSubmit}
+          />
         </div>
-      );
-    }
+      </div>
+    );
   }
+}
 
 class EditableTimerList extends React.Component {
     render() {
